@@ -99,10 +99,14 @@ google-chrome ./graph.svg
 
 - **main** : Cette branche correspond au code de production courant. Nous ne pouvons pas y pousser du code directement, sauf pour les correctifs. Les tags Git peuvent être utilisées pour baliser tous les commits de la branche **main** avec un numéro de version (par exemple, pour utiliser la convention de version sémantique, https://semver.org/ , qui comporte trois parties : majeure, mineure et patch, donc une balise avec la version 1.2.3 a 1 comme version majeure, 2 comme version mineure et 3 comme version de correctif).
 <br>
+
 - **preprod** : il s'agit d'une branche de publication et d'un miroir de la production. Il peut être utilisé pour tester toutes les nouvelles fonctionnalités développées sur la branche **develop** avant qu'elles ne soient fusionnées avec la branche **main**.
 <br>
+
 - **develop** : il s'agit de la branche d'intégration de développement, qui contient le dernier code de développement intégré.
 <br>
+
 - **feature/X** : il s'agit d'une branche de fonctionnalité individuelle en cours de développement. Chaque nouvelle fonctionnalité réside dans sa propre branche et est généralement créée pour la dernière branche de développement.
 <br>
+
 - **hotfix/X** : lorsque nous avons besoin de résoudre quelque chose dans le code de production, nous pouvons utiliser la branche **hotfix** et ouvrir une pull request pour la branche **main**. Cette branche est basée sur la branche **main**.
