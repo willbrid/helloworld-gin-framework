@@ -1,0 +1,156 @@
+{
+  "consumes": [
+    "application/json"
+  ],
+  "produces": [
+    "application/json"
+  ],
+  "schemes": [
+    "http"
+  ],
+  "swagger": "2.0",
+  "info": {
+    "description": "This is a sample recipes API : https://github.com/willbrid/helloworld-gin-framework",
+    "title": "Recipes API",
+    "contact": {
+      "name": "William Bridge",
+      "email": "ngaswilly77@gmail.com"
+    },
+    "version": "1.0.0"
+  },
+  "host": "localhost:8080",
+  "basePath": "/",
+  "paths": {
+    "/recipes": {
+      "get": {
+        "description": "Returns list of recipes",
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "recipes"
+        ],
+        "operationId": "listRecipes"
+      },
+      "post": {
+        "description": "Add a new recipe",
+        "tags": [
+          "recipes"
+        ],
+        "operationId": "newRecipe",
+        "parameters": [
+          {
+            "type": "string",
+            "description": "Name of the recipe",
+            "name": "name",
+            "in": "formData",
+            "required": true
+          },
+          {
+            "type": "array",
+            "description": "Tags of the recipe",
+            "name": "tags",
+            "in": "formData"
+          },
+          {
+            "type": "array",
+            "description": "Ingredients of the recipe",
+            "name": "ingredients",
+            "in": "formData"
+          },
+          {
+            "type": "array",
+            "description": "Instructions of the recipe",
+            "name": "instructions",
+            "in": "formData"
+          }
+        ]
+      }
+    },
+    "/recipes/search": {
+      "get": {
+        "description": "Returns search recipes",
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "recipes"
+        ],
+        "operationId": "searchRecipes",
+        "parameters": [
+          {
+            "type": "string",
+            "description": "tag to search",
+            "name": "tag",
+            "in": "query"
+          }
+        ]
+      }
+    },
+    "/recipes/{id}": {
+      "put": {
+        "description": "Update an existing recipe",
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "recipes"
+        ],
+        "operationId": "updateRecipe",
+        "parameters": [
+          {
+            "type": "string",
+            "description": "ID of the recipe",
+            "name": "id",
+            "in": "path",
+            "required": true
+          },
+          {
+            "type": "string",
+            "description": "Name of the recipe",
+            "name": "name",
+            "in": "formData",
+            "required": true
+          },
+          {
+            "type": "array",
+            "description": "Tags of the recipe",
+            "name": "tags",
+            "in": "formData"
+          },
+          {
+            "type": "array",
+            "description": "Ingredients of the recipe",
+            "name": "ingredients",
+            "in": "formData"
+          },
+          {
+            "type": "array",
+            "description": "Instructions of the recipe",
+            "name": "instructions",
+            "in": "formData"
+          }
+        ]
+      },
+      "delete": {
+        "description": "Delete an existing recipe",
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "recipes"
+        ],
+        "operationId": "deleteRecipe",
+        "parameters": [
+          {
+            "type": "string",
+            "description": "ID of the recipe",
+            "name": "id",
+            "in": "path",
+            "required": true
+          }
+        ]
+      }
+    }
+  }
+}
