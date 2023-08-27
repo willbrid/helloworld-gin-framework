@@ -1,22 +1,8 @@
-// Recipes API
-//
-// This is a sample recipes API : https://github.com/willbrid/helloworld-gin-framework
-//
-// Schemes: http
-// Host: localhost:8080
-// BasePath: /
-// Version: 1.0.0
-// Contact: William Bridge <ngaswilly77@gmail.com>
-// Consumes:
-// - application/json
-//
-// Produces:
-// - application/json
-// swagger:meta
 package main
 
 import (
 	"encoding/json"
+	"hello-world/docs"
 	"net/http"
 	"os"
 	"strings"
@@ -24,6 +10,8 @@ import (
 
 	"github.com/gin-gonic/gin"
 	"github.com/rs/xid"
+	swaggerfiles "github.com/swaggo/files"
+	ginSwagger "github.com/swaggo/gin-swagger"
 )
 
 type Recipe struct {
@@ -35,41 +23,24 @@ type Recipe struct {
 	PublishedAt  time.Time `json:"publishedAt"`
 }
 
-// swagger:operation POST /recipes recipes newRecipe
-// Add a new recipe
-// ---
-// parameters:
-//   - name: name
-//     in: formData
-//     description: Name of the recipe
-//     required: true
-//     type: string
-//   - name: tags
-//     in: formData
-//     description: Tags of the recipe
-//     required: false
-//     type: array
-//   - name: ingredients
-//     in: formData
-//     description: Ingredients of the recipe
-//     required: false
-//     type: array
-//   - name: instructions
-//     in: formData
-//     description: Instructions of the recipe
-//     required: false
-//     type: array
-//
-// ---
-// produces:
-// - application/json
-//
-// responses:
-//
-//	'200':
-//	  description: Successful operation
-//	'400':
-//	  description: Invalid input
+type HTTPMessage struct {
+	Message string `json:"message"`
+}
+
+type HTTPError struct {
+	Err string `json:"error"`
+}
+
+// @Summary newRecipe
+// @Schemes
+// @Description Add a new recipe
+// @Tags recipes
+// @Accept json
+// @Produce json
+// @Param recipe body Recipe true "Add recipe"
+// @Success 200 {object} Recipe
+// @Success 400 {object} HTTPError
+// @Router /recipes [post]
 func NewRecipeHandler(c *gin.Context) {
 	var recipe Recipe
 	if err := c.ShouldBindJSON(&recipe); err != nil {
@@ -84,61 +55,30 @@ func NewRecipeHandler(c *gin.Context) {
 	c.JSON(http.StatusOK, recipe)
 }
 
-// swagger:operation GET /recipes recipes listRecipes
-// Returns list of recipes
-// ---
-// produces:
-// - application/json
-//
-// responses:
-//
-//	'200':
-//	  description: Successful operation
+// @Summary listRecipes
+// @Schemes
+// @Description Returns list of recipes
+// @Tags recipes
+// @Accept json
+// @Produce json
+// @Success 200 {array} Recipe
+// @Router /recipes [get]
 func ListRecipesHandler(c *gin.Context) {
 	c.JSON(http.StatusOK, recipes)
 }
 
-// swagger:operation PUT /recipes/{id} recipes updateRecipe
-// Update an existing recipe
-// ---
-// parameters:
-//   - name: id
-//     in: path
-//     description: ID of the recipe
-//     required: true
-//     type: string
-//   - name: name
-//     in: formData
-//     description: Name of the recipe
-//     required: true
-//     type: string
-//   - name: tags
-//     in: formData
-//     description: Tags of the recipe
-//     required: false
-//     type: array
-//   - name: ingredients
-//     in: formData
-//     description: Ingredients of the recipe
-//     required: false
-//     type: array
-//   - name: instructions
-//     in: formData
-//     description: Instructions of the recipe
-//     required: false
-//     type: array
-//
-// produces:
-// - application/json
-//
-// responses:
-//
-//	'200':
-//	  description: Successful operation
-//	'400':
-//	  description: Invalid input
-//	'404':
-//	  description: Invalid recipe ID
+// @Summary updateRecipe
+// @Schemes
+// @Description Update an existing recipe
+// @Tags recipes
+// @Accept json
+// @Produce json
+// @Param id path int true "recipe id" Format(int64)
+// @Param recipe body Recipe true "Edit recipe"
+// @Success 200 {object} Recipe
+// @Success 400 {object} HTTPError
+// @Success 404 {object} HTTPError
+// @Router /recipes/{id} [put]
 func UpdateRecipeHandler(c *gin.Context) {
 	id := c.Param("id")
 	var recipe Recipe
@@ -164,25 +104,16 @@ func UpdateRecipeHandler(c *gin.Context) {
 	c.JSON(http.StatusOK, recipe)
 }
 
-// swagger:operation DELETE /recipes/{id} recipes deleteRecipe
-// Delete an existing recipe
-// ---
-// parameters:
-//   - name: id
-//     in: path
-//     description: ID of the recipe
-//     required: true
-//     type: string
-//
-// produces:
-// - application/json
-//
-// responses:
-//
-//	'200':
-//	  description: Successful operation
-//	'404':
-//	  description: Invalid recipe ID
+// @Summary deleteRecipe
+// @Schemes
+// @Description Delete an existing recipe
+// @Tags recipes
+// @Accept json
+// @Produce json
+// @Param id path int true "recipe id" Format(int64)
+// @Success 200 {object} HTTPMessage
+// @Success 404 {object} HTTPError
+// @Router /recipes/{id} [delete]
 func DeleteRecipeHandler(c *gin.Context) {
 	id := c.Param("id")
 	index := -1
@@ -201,23 +132,15 @@ func DeleteRecipeHandler(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{"message": "Recipe has been deleted"})
 }
 
-// swagger:operation GET /recipes/search recipes searchRecipes
-// Returns search recipes
-// ---
-// parameters:
-//   - name: tag
-//     in: query
-//     description: tag to search
-//     required: false
-//     type: string
-//
-// produces:
-// - application/json
-//
-// responses:
-//
-//	'200':
-//	  description: Successful operation
+// @Summary searchRecipes
+// @Schemes
+// @Description Returns search recipes
+// @Tags recipes
+// @Accept json
+// @Produce json
+// @Param tag query string  false "recipe search by tag" Format(string)
+// @Success 200 {array} Recipe
+// @Router /recipes/search [get]
 func SearchRecipesHandler(c *gin.Context) {
 	tag := c.Query("tag")
 	listOfRecipes := make([]Recipe, 0)
@@ -246,11 +169,20 @@ func init() {
 }
 
 func main() {
+	// programmatically set swagger info
+	docs.SwaggerInfo.Title = "Hello World GIN API"
+	docs.SwaggerInfo.Description = "Hello World GIN API."
+	docs.SwaggerInfo.Version = "1.0"
+	docs.SwaggerInfo.Host = "127.0.0.1:8080"
+	docs.SwaggerInfo.BasePath = "/"
+	docs.SwaggerInfo.Schemes = []string{"http", "https"}
+
 	router := gin.Default()
 	router.POST("/recipes", NewRecipeHandler)
 	router.GET("/recipes", ListRecipesHandler)
 	router.PUT("/recipes/:id", UpdateRecipeHandler)
 	router.DELETE("/recipes/:id", DeleteRecipeHandler)
 	router.GET("/recipes/search", SearchRecipesHandler)
+	router.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerfiles.Handler))
 	router.Run()
 }
